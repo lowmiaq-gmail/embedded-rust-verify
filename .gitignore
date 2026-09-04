@@ -1,0 +1,4 @@
+/target/
+/platforms/cortex-m/target/
+/reports/local/
+__pycache__/
