@@ -1,0 +1,8 @@
+{
+  "status": "NOT_MEASURED",
+  "board": "NUCLEO-F401RE",
+  "cycles": null,
+  "hardware_functional_digest": null,
+  "peak_stack": null,
+  "reason": "No physical debug probe is exposed in the execution environment."
+}

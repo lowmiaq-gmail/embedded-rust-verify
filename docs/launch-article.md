@@ -37,3 +37,10 @@ vendor dependency; future backends may reuse it, but they do not expand this rel
 
 Before publishing this article, link the actual public repository, immutable
 release, raw reports and CI run. Replace pending results only with observations.
+
+## Available local evidence
+
+The fresh-clone run passed 120 host cases and six unit tests. Cortex-M linked
+Flash is 8,568 bytes for C dispatch and 8,544 for the wrapper; read-only data
+increased by 16 bytes. Both reserve 16 KiB stack plus 12 bytes static RAM.
+Actual stack peak and board cycles are unknown. See ../reports/initial/README.md.

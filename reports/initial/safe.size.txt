@@ -1,0 +1,14 @@
+reports/local/safe.elf  :
+section           size        addr
+.vector_table     1024   134217728
+.text             6892   134218752
+.rodata            628   134225644
+.data                0   536870912
+.gnu.sgstubs         0   134226272
+.bss                12   536870912
+.uninit              0   536870924
+.comment           208           0
+.ARM.attributes     69           0
+Total             8833
+
+

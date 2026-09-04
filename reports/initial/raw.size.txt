@@ -1,0 +1,14 @@
+reports/local/raw.elf  :
+section           size        addr
+.vector_table     1024   134217728
+.text             6932   134218752
+.rodata            612   134225684
+.data                0   536870912
+.gnu.sgstubs         0   134226304
+.bss                12   536870912
+.uninit              0   536870924
+.comment           208           0
+.ARM.attributes     69           0
+Total             8857
+
+

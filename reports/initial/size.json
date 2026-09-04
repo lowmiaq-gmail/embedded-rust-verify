@@ -1,0 +1,42 @@
+{
+  "status": "BUILD_ONLY",
+  "stack_reserved_bytes": 16384,
+  "stack_peak_bytes": null,
+  "heap_peak_bytes": null,
+  "binaries": {
+    "raw": {
+      "sha256": "3023ce88c595be6557e0d2136c9929b3a46f26991bbd1dd429e577de303eca67",
+      "sections": {
+        ".vector_table": 1024,
+        ".text": 6932,
+        ".rodata": 612,
+        ".data": 0,
+        ".gnu.sgstubs": 0,
+        ".bss": 12,
+        ".uninit": 0,
+        ".comment": 208,
+        ".ARM.attributes": 69
+      },
+      "flash_section_bytes": 8568,
+      "ram_static_bytes": 12,
+      "ram_reserved_total_bytes": 16396
+    },
+    "safe": {
+      "sha256": "751f441c1c522f1504ce220382f871402905c388aec6b0216942aafcc1828c4d",
+      "sections": {
+        ".vector_table": 1024,
+        ".text": 6892,
+        ".rodata": 628,
+        ".data": 0,
+        ".gnu.sgstubs": 0,
+        ".bss": 12,
+        ".uninit": 0,
+        ".comment": 208,
+        ".ARM.attributes": 69
+      },
+      "flash_section_bytes": 8544,
+      "ram_static_bytes": 12,
+      "ram_reserved_total_bytes": 16396
+    }
+  }
+}
