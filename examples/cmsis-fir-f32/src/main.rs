@@ -97,7 +97,19 @@ fn main() {
             }
         }
     }
-    let report = json!({"schema":1,"status":if pass {"PASS"} else {"FAIL"},"claim":"wrapper behavioral equivalence and independent reference cross-check; no hardware performance claim","metadata":{"rustc":command("rustc",&["-Vv"]),"cc":command("cc",&["--version"]),"commit":command("git",&["rev-parse","HEAD"]),"dirty":!command("git",&["status","--porcelain"]).is_empty(),"target":"x86_64-unknown-linux-gnu","c_flags":"-O3 -ffp-contract=off -fno-fast-math -D__GNUC_PYTHON__","rust_profile":"release opt-level=3 lto=false codegen-units=1","cmsis_commit":"d5717e454fec0337bef114a21f1d2d01d74f2701","seed":"0x514f2701"},"tolerance":{"absolute":2e-5,"relative":2e-5,"domain":"finite samples in [-16,16]; coefficients normalized by taps; nonfinite always fails"},"hardware":{"status":"NOT_MEASURED","cycles":null,"flash":null,"ram":null},"cases":rows});
+    // Exact board corpus, cross-checked independently before emitting its expected digest.
+    let mut rng = Corpus::new(0x514f2701);
+    let coeff: Vec<f32> = (0..31).map(|_| rng.sample() / 31.).collect();
+    let input: Vec<f32> = (0..512).map(|_| rng.sample()).collect();
+    let mut output = vec![0.; 512];
+    raw_stream(&coeff, &mut [0.; 94], &input, &mut output, 64).unwrap();
+    let board_reference_pass = tolerance
+        .compare(&reference(&coeff, &input), &output)
+        .mismatches
+        == 0;
+    pass &= board_reference_pass;
+    let hardware_corpus = json!({"expected_digest":format!("{:016x}",digest(&output)),"reference_pass":board_reference_pass,"samples":512,"block":64,"taps":31});
+    let report = json!({"schema":1,"hardware_corpus":hardware_corpus,"status":if pass {"PASS"} else {"FAIL"},"claim":"wrapper behavioral equivalence and independent reference cross-check; no hardware performance claim","metadata":{"c_build":verify_cmsis_dsp::C_BUILD_METADATA,"rustc":command("rustc",&["-Vv"]),"cc":command("cc",&["--version"]),"commit":command("git",&["rev-parse","HEAD"]),"dirty":!command("git",&["status","--porcelain"]).is_empty(),"target":"x86_64-unknown-linux-gnu","c_flags":"-O3 -ffp-contract=off -fno-fast-math -D__GNUC_PYTHON__","rust_profile":"release opt-level=3 lto=false codegen-units=1","cmsis_commit":"d5717e454fec0337bef114a21f1d2d01d74f2701","seed":"0x514f2701"},"tolerance":{"absolute":2e-5,"relative":2e-5,"domain":"finite samples in [-16,16]; coefficients normalized by taps; nonfinite always fails"},"hardware":{"status":"NOT_MEASURED","cycles":null,"flash":null,"ram":null},"cases":rows});
     let dir = std::env::args().nth(1).unwrap_or("reports/local".into());
     verify_report::write(std::path::Path::new(&dir), &report).unwrap();
     println!(

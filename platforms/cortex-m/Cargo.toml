@@ -1,0 +1,22 @@
+[package]
+name = "fir-bench"
+version = "0.1.0"
+edition = "2021"
+license = "MIT OR Apache-2.0"
+publish = false
+[workspace]
+[features]
+default = []
+raw = []
+safe = []
+[dependencies]
+verify-cmsis-dsp = { path = "../../adapters/cmsis-dsp" }
+verify-core = { path = "../../crates/verify-core" }
+cortex-m = "=0.7.7"
+cortex-m-rt = "=0.7.5"
+cortex-m-semihosting = "=0.5.0"
+[profile.release]
+opt-level = 3
+lto = false
+codegen-units = 1
+panic = "abort"

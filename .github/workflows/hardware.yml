@@ -1,0 +1,14 @@
+name: hardware-validation-request
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*-rc*']
+permissions:
+  contents: read
+jobs:
+  request:
+    runs-on: ubuntu-24.04
+    steps:
+      - run: |
+          echo 'Hardware runner is not provisioned. Follow docs/hardware.md; release is blocked until real logs are collected.' >> "$GITHUB_STEP_SUMMARY"
+          exit 1

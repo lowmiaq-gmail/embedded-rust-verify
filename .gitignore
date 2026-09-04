@@ -2,3 +2,4 @@
 /platforms/cortex-m/target/
 /reports/local/
 __pycache__/
+/.tools/

@@ -18,6 +18,23 @@ fn main() {
     } else {
         panic!("Only reviewed x86_64 Linux and Cortex-M4F configurations are supported");
     }
+    let compiler = b.get_compiler();
+    let version = std::process::Command::new(compiler.path())
+        .arg("--version")
+        .output()
+        .expect("C compiler version");
+    assert!(version.status.success());
+    let metadata = format!(
+        "compiler={}\nargs={:?}\nversion={}\n",
+        compiler.path().display(),
+        compiler.args(),
+        String::from_utf8_lossy(&version.stdout)
+    );
+    std::fs::write(
+        std::path::PathBuf::from(std::env::var_os("OUT_DIR").unwrap()).join("c-build.txt"),
+        metadata,
+    )
+    .unwrap();
     b.compile("verify_fir");
     println!("cargo:rerun-if-changed=../../vendor");
     println!("cargo:rerun-if-changed=src/baseline.c");

@@ -1,0 +1,56 @@
+name: verify
+on:
+  pull_request:
+    types: [opened, synchronize, reopened, labeled]
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: verify-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  verify:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/cache@v4
+        with:
+          path: |
+            ~/.cargo/registry
+            ~/.cargo/git
+            ~/.rustup
+            .tools
+            target
+            platforms/cortex-m/target
+          key: verify-${{ runner.os }}-${{ hashFiles('**/Cargo.lock', 'rust-toolchain.toml', 'tools/install-arm.sh', 'adapters/cmsis-dsp/build.rs') }}
+      - run: rustup show
+      - run: python3 tools/vendor-check.py
+      - run: cargo fmt --all -- --check
+      - run: cargo fmt --manifest-path platforms/cortex-m/Cargo.toml -- --check
+      - run: cargo clippy --workspace --all-targets --locked -- -D warnings
+      - run: cargo test --workspace --locked
+      - run: cargo run --release --locked -p cmsis-fir-f32 -- reports/local
+      - run: |
+          bash tools/install-arm.sh
+          echo "$PWD/.tools/arm-gnu-toolchain-12.3.rel1-x86_64-arm-none-eabi/bin" >> "$GITHUB_PATH"
+      - run: bash tools/cross-build.sh
+      - run: python3 tools/fingerprint.py > reports/local/source-fingerprint.txt
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verification-${{ github.sha }}
+          path: reports/local
+      - name: Hardware impact assessment
+        if: github.event_name == 'pull_request'
+        env:
+          BASE: ${{ github.event.pull_request.base.sha }}
+          HEAD: ${{ github.event.pull_request.head.sha }}
+          LABELS: ${{ toJSON(github.event.pull_request.labels.*.name) }}
+        run: |
+          python3 tools/hardware-impact.py "$BASE" "$HEAD" >> "$GITHUB_STEP_SUMMARY"
+          if [[ "$LABELS" == *hardware-validation* ]]; then
+            echo 'Explicit hardware-validation request: collect fresh board evidence.' >> "$GITHUB_STEP_SUMMARY"
+          fi

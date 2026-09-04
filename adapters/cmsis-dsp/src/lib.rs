@@ -3,6 +3,7 @@
 //! A private verification adapter for the scalar/M4F CMSIS-DSP FIR implementation.
 //! Coefficients use CMSIS order: oldest sample first (reverse impulse response).
 mod ffi;
+pub const C_BUILD_METADATA: &str = include_str!(concat!(env!("OUT_DIR"), "/c-build.txt"));
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]
 pub enum Error {
     Taps,
