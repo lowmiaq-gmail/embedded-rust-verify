@@ -2,9 +2,11 @@
 
 The public repository is
 https://github.com/lowmiaq-gmail/embedded-rust-verify. Remote verify run
+[33936084100](https://github.com/lowmiaq-gmail/embedded-rust-verify/actions/runs/33936084100)
+passed the Python regressions, Rust host suite, 120-case report and paired
+Cortex-M4F builds for closure commit `54bd85a` on pull request #1. Earlier run
 [33919823405](https://github.com/lowmiaq-gmail/embedded-rust-verify/actions/runs/33919823405)
-passed the host suite and paired Cortex-M4F builds for reviewed baseline
-`6fa720f`.
+remains the reviewed `6fa720f` baseline.
 
 Software implemented: pinned official C sources and dual license, borrowed Safe
 Rust FIR interface, platform-independent verification primitives, independent
