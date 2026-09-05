@@ -1,0 +1,17 @@
+{
+  "schema": 1,
+  "status": "PASS",
+  "hardware_corpus": {
+    "id": "3333333333333333333333333333333333333333333333333333333333333333",
+    "schema": 1,
+    "seed": "0x514f2701",
+    "taps": 31,
+    "block": 64,
+    "samples": 512,
+    "blocks": 8,
+    "expected_digest": "84bd49eb9b034da3",
+    "coeff_digest": "1111111111111111",
+    "input_digest": "2222222222222222",
+    "reference_pass": true
+  }
+}
