@@ -1,14 +1,42 @@
-name: hardware-validation-request
+name: hardware-evidence-verification
+
 on:
   workflow_dispatch:
+    inputs:
+      evidence_dir:
+        description: Repository-relative directory containing a real manual hardware capture
+        required: true
+        type: string
   push:
     tags: ['v*-rc*']
+
 permissions:
   contents: read
+
 jobs:
-  request:
+  verify-evidence:
     runs-on: ubuntu-24.04
     steps:
-      - run: |
-          echo 'Hardware runner is not provisioned. Follow docs/hardware.md; release is blocked until real logs are collected.' >> "$GITHUB_STEP_SUMMARY"
-          exit 1
+      - uses: actions/checkout@v4
+      - name: Select evidence directory
+        id: evidence
+        env:
+          REQUESTED_DIR: ${{ inputs.evidence_dir }}
+          RELEASE_TAG: ${{ github.ref_name }}
+          EVENT_NAME: ${{ github.event_name }}
+        run: |
+          if [[ "$EVENT_NAME" == "workflow_dispatch" ]]; then
+            evidence_dir="$REQUESTED_DIR"
+          else
+            evidence_dir="reports/hardware/$RELEASE_TAG"
+          fi
+          case "$evidence_dir" in
+            /*|*..*) echo "Evidence directory must be repository-relative and cannot contain '..'" >&2; exit 2 ;;
+          esac
+          echo "dir=$evidence_dir" >> "$GITHUB_OUTPUT"
+      - name: Revalidate real manual hardware evidence
+        run: python3 tools/verify-hardware-evidence.py --evidence-dir "${{ steps.evidence.outputs.dir }}"
+      - name: Record result
+        run: |
+          echo "Validated identity-bound manual evidence at \`${{ steps.evidence.outputs.dir }}\`." >> "$GITHUB_STEP_SUMMARY"
+          echo "This job revalidates committed evidence; it does not claim that GitHub-hosted runners executed the board." >> "$GITHUB_STEP_SUMMARY"

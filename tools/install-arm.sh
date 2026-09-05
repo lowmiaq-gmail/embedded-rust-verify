@@ -1,6 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 # Pinned official archive; local install, no root needed.
+if [[ "$(uname -s)" != Linux || "$(uname -m)" != x86_64 ]]; then
+ echo "tools/install-arm.sh supports only Linux x86_64; use a matching CI artifact on this host." >&2
+ exit 2
+fi
 base="${ARM_TOOLCHAIN_DIR:-$PWD/.tools}"
 mkdir -p "$base"
 name=arm-gnu-toolchain-12.3.rel1-x86_64-arm-none-eabi

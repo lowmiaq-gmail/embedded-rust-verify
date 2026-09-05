@@ -108,7 +108,18 @@ fn main() {
         .mismatches
         == 0;
     pass &= board_reference_pass;
-    let hardware_corpus = json!({"expected_digest":format!("{:016x}",digest(&output)),"reference_pass":board_reference_pass,"samples":512,"block":64,"taps":31});
+    let hardware_corpus = json!({
+        "schema": 1,
+        "seed": "0x514f2701",
+        "taps": 31,
+        "block": 64,
+        "blocks": 8,
+        "samples": 512,
+        "coeff_digest": format!("{:016x}", digest(&coeff)),
+        "input_digest": format!("{:016x}", digest(&input)),
+        "expected_digest": format!("{:016x}", digest(&output)),
+        "reference_pass": board_reference_pass
+    });
     let report = json!({"schema":1,"hardware_corpus":hardware_corpus,"status":if pass {"PASS"} else {"FAIL"},"claim":"wrapper behavioral equivalence and independent reference cross-check; no hardware performance claim","metadata":{"c_build":verify_cmsis_dsp::C_BUILD_METADATA,"rustc":command("rustc",&["-Vv"]),"cc":command("cc",&["--version"]),"commit":command("git",&["rev-parse","HEAD"]),"dirty":!command("git",&["status","--porcelain"]).is_empty(),"target":"x86_64-unknown-linux-gnu","c_flags":"-O3 -ffp-contract=off -fno-fast-math -D__GNUC_PYTHON__","rust_profile":"release opt-level=3 lto=false codegen-units=1","cmsis_commit":"d5717e454fec0337bef114a21f1d2d01d74f2701","seed":"0x514f2701"},"tolerance":{"absolute":2e-5,"relative":2e-5,"domain":"finite samples in [-16,16]; coefficients normalized by taps; nonfinite always fails"},"hardware":{"status":"NOT_MEASURED","cycles":null,"flash":null,"ram":null},"cases":rows});
     let dir = std::env::args().nth(1).unwrap_or("reports/local".into());
     verify_report::write(std::path::Path::new(&dir), &report).unwrap();

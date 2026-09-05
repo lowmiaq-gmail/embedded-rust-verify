@@ -2,6 +2,9 @@
 
 **Draft: hardware results and first release are pending.**
 
+Repository: https://github.com/lowmiaq-gmail/embedded-rust-verify. Do not publish
+this draft until the hardware and release links below are real.
+
 An embedded migration needs more than code that compiles. A safe interface can
 change buffer ownership, initialization and dispatch costs even when the C
 algorithm underneath stays untouched. embedded-rust-verify asks three separate
