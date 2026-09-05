@@ -6,6 +6,7 @@ not broken behavior or introduced unacceptable performance regressions?
 **First case: CMSIS-DSP `arm_fir_f32`, unchanged official C implementation.**
 Status: pre-release prototype; host verification and Cortex-M4F cross-build PASS.
 Hardware cycles are **not measured**. No release or zero-cost claim is made.
+Public repository: https://github.com/lowmiaq-gmail/embedded-rust-verify.
 
 ```sh
 # After cloning this repository, Linux x86_64 with rustup, C compiler, Python 3:
@@ -90,6 +91,12 @@ First build requires downloads; subsequent builds reuse toolchain/dependency cac
 - `platforms/cortex-m`: paired NUCLEO-F401RE Cortex-M4F firmware.
 - `tools`: source identity, size collection, log parsing and publication helper.
 
+The verify workflow artifact carries a build manifest that binds the exact host
+report, corpus, build inputs, toolchains and both ELF hashes. On a board-connected
+host, `python3 tools/run-hardware.py --artifact-dir reports/local --check-only`
+validates the artifact/OpenOCD prerequisites without flashing. The full
+one-command capture procedure is in [hardware procedure](docs/hardware.md).
+
 Fresh-clone reproduction was executed for the source commit recorded in initial
 reports. [Local delivery status](docs/STATUS.md) lists remaining work.
 
@@ -105,8 +112,7 @@ fails instead of claiming an unexecuted test passed. See [policy](docs/verificat
 First release requires physical cycle observations, memory accounting, functional
 PASS, fresh-clone reproduction, remote CI green and complete licensing. Application
 budgets must define what regression is acceptable; an Arm core name alone does not.
-No public release has been created. In an authenticated GitHub CLI environment,
-`bash tools/publish-repository.sh` creates the authorized public repository only.
+The public repository exists, but no tag or GitHub Release has been created.
 
 ## Ecosystem and next steps
 
@@ -121,5 +127,11 @@ Renesas, Zephyr and C2000 out of the first case. No Rust C28x target is assumed.
 [Third-party notices](THIRD-PARTY-NOTICES.md) · [Contributing](CONTRIBUTING.md).
 Own code: MIT OR Apache-2.0; third-party licenses remain unchanged.
 
-Need to validate a proprietary embedded C → Rust migration? The same verification
-framework can be run on private firmware and vendor SDKs without publishing source code.
+## Service entry
+
+For one existing embedded C module, the offered engagement is deliberately
+narrow: analyze its memory-safety boundary, add a gradual borrowed Safe Rust
+interface, classify which changes invalidate evidence, and deliver reproducible
+host/build/hardware reports. The customer's production algorithm stays in place;
+source disclosure, target expansion and a general wrapper framework are not
+assumed. Contact is manual and scoped to one candidate module.

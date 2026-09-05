@@ -31,3 +31,17 @@ cycles separately. Add the completed evidence report and public repository here.
 Can a safe Rust API wrap CMSIS-DSP without unacceptable overhead? We built one FIR
 case with reproducible behavior checks and explicit measurement boundaries.
 Add measured results + public report link before posting.
+
+## Manual customer outreach — draft, do not bulk-send
+
+Subject: Evidence-backed Safe Rust boundary for one embedded C module
+
+I help embedded teams evaluate one existing C module before expanding a Rust
+migration. The engagement keeps the production algorithm in place, analyzes the
+FFI and buffer-safety boundary, adds a gradual borrowed Safe Rust interface, and
+delivers change-impact rules plus reproducible host, build and target-hardware
+evidence. The public CMSIS-DSP FIR case shows the reporting shape; it is not a
+claim that another module or target has already been validated. If one bounded
+module is creating migration risk, I can first review its interface, target,
+toolchain and evidence requirements. This message is for individual, manual
+contact only; do not automate or imply prior customer results.
